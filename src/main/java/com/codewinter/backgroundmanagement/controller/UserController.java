@@ -237,6 +237,27 @@ public class UserController {
       return "login";
    }
 
+   @RequestMapping("/update")
+   @ResponseBody
+   public CommonReturnType updateUserById(@RequestBody User user){
+
+      //将提交的密码与新盐加密
+      String salt=SaltUtils.getSalt(8);
+      user.setSalt(salt);
+      //保存用户信息
+      int res=1; //res=-2
+      // res=userService.updateUserById(user);
+      CommonReturnType commonReturnType=new CommonReturnType();
+      if(res==1){
+         commonReturnType.setStatus("200");
+         commonReturnType.setData(" update user message ok!");
+         return commonReturnType;
+      }else{
+         commonReturnType.setStatus("500");
+         commonReturnType.setData(" update user message failed!");
+         return commonReturnType;
+      }
+   }
 
 
    @GetMapping("/register")

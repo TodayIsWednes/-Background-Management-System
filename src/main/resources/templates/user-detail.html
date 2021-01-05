@@ -304,19 +304,26 @@
            var rePassword=$("#user-repassword").val();
            var userName=$("#user-name").val();
            var userId=$("#user-id").val();
+           var data=JSON.stringify({
+               id:userId,
+               userName:userName,
+               password:rePassword,
+           });
            //1.不为空提交
            if(!isEmpty(rePassword)&&!isEmpty(userName)&&!isEmpty(userId)){
                $.ajax({
                    method:"post",
                    url:"/user/update",
+                   contentType:"application/json",
                    dataType:"json",
-                   data:{
-                       userId:userId,
-                       userName:userName,
-                       rePassword:rePassword,
-                   },
+                   data:data,
                    success:function(data){
-
+                       if(data.status=="200"){
+                           Swal.fire("OK", "用户信息修改成功！", "success");
+                           setTimeout("window.location.reload();",1200);
+                       }else if(data.status=="500"){
+                           Swal.fire("哦豁", "发生了一些错误，请联系管理员！", "error");
+                       }
                    },
                    error:function(data){
 
