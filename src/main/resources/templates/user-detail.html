@@ -29,7 +29,6 @@
         <div  th:include="header::header"></div>
         <!--页面主要内容-->
         <main class="lyear-layout-content">
-            <div id="app">
 
                 <div class="container-fluid">
 
@@ -43,16 +42,17 @@
 
                                     <form action="#!" method="post">
                                         <div class="form-group">
-                                            <label for="role-name">用户名</label>
-                                            <input class="form-control" type="text" id="role-name" name="role-name" th:value="${user.userName}">
 
-                                            <label for="role-repassword">修改密码</label>
-                                            <input class="form-control" type="text" id="role-repassword" name="role-repassword" >
-                                            <label for="role-createtime">创建时间</label>
-                                            <input class="form-control" type="disable" id="role-createtime" name="role-repassword" th:value="${user.createTime}">
+                                            <label for="user-name">用户名</label>
+                                            <input class="form-control" type="text" id="user-name" name="role-name" th:placeholder="${user.userName}">
 
-                                            <label for="role-updatetime">更新时间</label>
-                                            <input class="form-control" type="disable" id="role-updatetime" name="role-repassword" th:value="${user.updateTime}">
+                                            <label for="user-repassword">修改密码</label>
+                                            <input class="form-control" type="password" id="user-repassword" name="role-repassword" >
+                                            <label for="user-createtime">创建时间</label>
+                                            <input class="form-control" type="disable" id="user-createtime" name="role-createtime" th:value="${user.createTime}">
+
+                                            <label for="user-updatetime">更新时间</label>
+                                            <input class="form-control" type="disable" id="user-updatetime" name="role-repassword" th:value="${user.updateTime}">
 
                                         </div>
                                         <div>
@@ -115,7 +115,7 @@
                                         <div class="card-header"><h4>操作</h4></div>
                                         <div class="card-body">
                                             <div class="example-box">
-                                                <button @click="getCheckedKeys" class="btn btn-label btn-primary"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 确认提交</button>
+                                                <button id="user-modify-btn" class="btn btn-label btn-primary"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 确认提交</button>
                                                 <button class="btn btn-label btn-warning"><label><i class="mdi mdi-delete-empty"></i></label> 清空数据</button>
                                             </div>
                                         </div>
@@ -128,7 +128,7 @@
                     </div>
                 </div>
 
-            </div>
+
         </main>
 
         <!--End 页面主要内容-->
@@ -178,6 +178,14 @@
            inputArray.push($(this).val());
        })
        return inputArray;
+   }
+
+   function isEmpty(str){
+       if(str==""||str==null||str==undefined){
+           return true;
+       }else{
+           return false;
+       }
    }
 
    $(document).ready(function(){
@@ -290,6 +298,36 @@
 
 
        })
+
+       $("#user-modify-btn").click(function(){
+           //获取用户填写表单信息
+           var rePassword=$("#user-repassword").val();
+           var userName=$("#user-name").val();
+           var userId=$("#user-id").val();
+           //1.不为空提交
+           if(!isEmpty(rePassword)&&!isEmpty(userName)&&!isEmpty(userId)){
+               $.ajax({
+                   method:"post",
+                   url:"/user/update",
+                   dataType:"json",
+                   data:{
+                       userId:userId,
+                       userName:userName,
+                       rePassword:rePassword,
+                   },
+                   success:function(data){
+
+                   },
+                   error:function(data){
+
+                   }
+               })
+           }else{//2.为空提示
+               Swal.fire("哦豁", "请把表单信息填写完整后在提交！", "error");
+           }
+
+
+       });
     });
 
 </script>
