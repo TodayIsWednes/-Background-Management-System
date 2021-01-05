@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.codewinter.backgroundmanagement.dao.CourseDao">
+
+    <resultMap id="CourseMap" type="Course">
+        <id column="id" property="id"></id>
+        <result column="coursename" property="courseName"></result>
+        <result column="description" property="description"></result>
+        <result column="createtime" property="createTime"></result>
+        <result column="updatetime" property="updateTime"></result>
+    </resultMap>
+    
+    <resultMap id="CoursePaperMap" type="Course">
+        <id column="id" property="id"></id>
+        <result column="coursename" property="courseName"></result>
+        <result column="description" property="description"></result>
+        <result column="createtime" property="createTime"></result>
+        <result column="updatetime" property="updateTime"></result>
+        <collection property="paperList" ofType="Paper">
+            <id column="id" property="id"></id>
+            <result column="papername" property="paperName"></result>
+            <result column="testtime" property="testTime"></result>
+            <result column="duration" property="duration"></result>
+            <result column="courseid" property="courseId"></result>
+            <result column="status" property="status"></result>
+            <result column="createtime" property="createTime"></result>
+            <result column="updatetime" property="updateTime"></result>
+        </collection>
+    </resultMap>
+    <select id="findCourseById" parameterType="java.lang.Long" resultMap="CourseMap">
+        select id, coursename, description, createtime, updatetime from t_course where id=#{id}
+    </select>
+
+    <select id="findCourseByName" parameterType="java.lang.String" resultMap="CourseMap">
+        select id, coursename, description, createtime, updatetime from t_course where coursename like concat('%',#{courseName,jdbcType=VARCHAR},'%')
+    </select>
+
+    <select id="findAllCourse" resultMap="CourseMap">
+        select  id, coursename, description, createtime, updatetime from t_course
+    </select>
+
+    <select id="findCourse" parameterType="Course" resultMap="CourseMap">
+        select  id, coursename, description, createtime, updatetime from t_course
+        <where>
+            <if test="id!=null">id=#{id}</if>
+            <if test="courseName!=null and courseName!=''">coursename=#{courseName}</if>
+            <if test="description!=null and description!=''">description=#{description}</if>
+            <if test="updateTime!=null and updateTime!=''">updatetime=#{updateTime}</if>
+            <if test="createTime!=null and createTime!=''">createtime=#{createTime}</if>
+        </where>
+    </select>
+
+    <select id="findCourseAndPaperById" parameterType="java.lang.Long" resultMap="CoursePaperMap">
+         select  tc.id, tc.coursename, tc.description, tc.createtime, tc.updatetime,
+         from t_course tc left join  t_paper tp on tc.id=tp.courseid
+         where tc.id=#{id}
+    </select>
+
+    <insert id="save" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
+        insert into t_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseName!=null and courseName!=''"> coursename,</if>
+            <if test="description!=null and description!=''"> description,</if>
+            <if test="createTime!=null and createTime!=''"> createtime,</if>
+            <if test="updateTime!=null and updateTime!=''"> updatetime,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseName!=null and courseName!=''"> #{courseName},</if>
+            <if test="description!=null and description!=''"> #{description},</if>
+            <if test="createTime!=null and createTime!=''"> #{createTime},</if>
+            <if test="updateTime!=null and updateTime!=''"> #{updateTime},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteCourse" parameterType="Course">
+        delete from t_course
+        <where>
+            <if test="courseName!=null and courseName!=''"> coursename=#{courseName}</if>
+            <if test="description!=null and description!=''">AND description=#{description}</if>
+            <if test="createTime!=null and createTime!=''">AND createtime=#{createTime}</if>
+            <if test="updateTime!=null and updateTime!=''">AND updatetime=#{updateTime}</if>
+        </where>
+    </delete>
+
+    <update id="updateCourseById" parameterType="Course">
+        update t_course
+        <set>
+            <if test="courseName!=null and courseName!=''">coursename=#{courseName},</if>
+            <if test="description!=null and description!=''">description=#{description},</if>
+            <if test="createTime!=null and createTime!=''">createtime=#{createTime},</if>
+            <if test="updateTime!=null and updateTime!=''">updatetime=#{updateTime},</if>
+        </set>
+         where id=#{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>文档列表 - 光年(Light Year Admin)后台管理系统模板</title>
+    <link rel="icon" th:href="@{favicon.ico}" type="image/ico">
+    <meta name="keywords" content="LightYear,光年,后台模板,后台管理系统,光年HTML模板">
+    <meta name="description" content="LightYear是一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
+    <meta name="author" content="yinqi">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+
+
+    <link th:href="@{/element/css/index-plus.css}" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.4/sweetalert2.min.css" rel="stylesheet"/>
+</head>
+
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <div  th:include="left_nav::left_nav"></div>
+        <!--End 左侧导航-->
+
+        <!--头部信息-->
+        <div  th:include="header::header"></div>
+
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+
+
+
+                            <div class="card-body">
+
+                                <div class="table-responsive">
+
+
+                                        <!--- tree table end --->
+                                <div id="app">
+
+                                    <el-row style="margin-bottom:10px">
+                                            <el-col :span="8"><div class="grid-content">
+                                                <el-button type="success" @click="dialogFormVisible = true"><i class="mdi mdi-plus"></i>新增</el-button>
+                                                <el-button type="primary"><i class="mdi mdi-cloud-download"></i>导出</el-button>
+                                            </div>
+                                            </el-col>
+                                        <el-dialog title="新建权限" v-model="dialogFormVisible">
+                                            <el-form :model="perm">
+                                                <el-form-item label="权限名称" :label-width="formLabelWidth">
+                                                    <el-input v-model="perm.permname" autocomplete="off"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="权限描述" :label-width="formLabelWidth">
+                                                    <el-input type="textarea" v-model="perm.description"></el-input>
+                                                </el-form-item>
+                                            </el-form>
+                                            <template #footer>
+                                                <span class="dialog-footer">
+                                                  <el-button @click="dialogFormVisible = false">取 消</el-button>
+                                                  <el-button type="primary" @click="openFullScreen">确 定</el-button>
+                                                </span>
+                                              </template>
+
+                                            <el-dialog
+                                                    width="30%"
+                                                    title="请填写完整信息"
+                                                    v-model="innerVisible"
+                                                    append-to-body>
+
+                                            </el-dialog>
+
+                                        </el-dialog>
+
+
+
+                                        <el-col :span="8"><div class="grid-content bg-purple-light"></div></el-col>
+
+                                            <el-col :span="8"><div class="grid-content bg-purple-light">
+                                                <div>
+                                                    <el-input
+                                                            placeholder="请输入内容"
+                                                            v-model="input"
+                                                            class="input-with-select"
+                                                    >
+                                                        <template #prepend>
+                                                            <el-select v-model="select" placeholder="请选择">
+                                                                <el-option label="权限名称" value="1"></el-option>
+                                                                <el-option label="url" value="2"></el-option>
+                                                            </el-select>
+                                                        </template>
+                                                        <template #append>
+                                                            <el-button icon="el-icon-search" @click="searchByTag"></el-button>
+                                                        </template>
+                                                    </el-input>
+                                                </div>
+                                            </div></el-col>
+
+
+
+
+
+                                    </el-row>
+
+                                        <div>
+                                            <el-table class="tableBox"
+                                                    :data="tableData"
+                                                    style="width: 100%;margin-bottom: 20px;"
+                                                    row-key="id"
+                                                    border
+                                                      ref="multipleTable"
+                                                      @select="rowSelect"
+                                                      @select-all="selectAll"
+                                                    :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+
+                                                <el-table-column
+                                                        type="selection">
+
+                                                </el-table-column>
+
+                                                <el-table-column
+                                                        prop="id" label="ID">
+
+                                                </el-table-column>
+
+                                                <el-table-column
+                                                        prop="permName"
+                                                        label="权限名称">
+                                                </el-table-column>
+
+                                                <el-table-column
+                                                    prop="url"
+                                                    label="url">
+
+                                                </el-table-column>
+                                                <el-table-column
+                                                        prop="level"
+                                                        label="level">
+                                                </el-table-column>
+                                                <el-table-column
+                                                        prop="visible"
+                                                        label="可见性"
+                                                        >
+                                                </el-table-column>
+                                                <el-table-column
+                                                        prop="parentId"
+                                                        label="父权限ID"
+                                                        >
+                                                </el-table-column>
+                                                <el-table-column
+                                                        label="操作"
+                                                        >
+                                                </el-table-column>
+                                            </el-table>
+                                        </div>
+
+                                </div>
+                                    <!--- tree table end --->
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                    <!--- app end --->
+
+
+            </div>
+
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/perfect-scrollbar.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.4/sweetalert2.min.js"></script>
+
+<script type="text/javascript" th:src="@{/element/js/vue.global.js}"></script>
+<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/element/js/index.full.js}"></script>
+
+<script>
+
+
+    axios({
+        method:'get',
+        url:'/perm/get',
+        responseType:'json'
+    }).then(function(response) {
+        menuTree=response.data.data;
+
+        var Main = {
+                data() {
+                    return {
+                        tableData: menuTree,
+                        dialogTableVisible: false,
+                        dialogFormVisible: false,
+                        innerVisible: false,
+                        perm: {
+                            permname: '',
+                            description: ''
+                        },
+                        input:'',
+                        select:'',
+                        formLabelWidth: '120px'
+                    }
+                },
+
+                methods: {
+                    /*注意在获取初始数据时，所有节点（包括子节点）都增加一个isChecked 标志参数*/
+                    rowSelect(selection, row) {
+                        //selection 所有的被选中的
+                        //row 当前被选中的
+
+                        //注意是三级权限
+                        if (row.children) { //只对有子节点的行响应
+                            if (!row.isChecked) {   //由行数据中的元素isChecked判断当前是否被选中
+                                row.children.map((item) => { //遍历所有子节点
+                                    this.$refs.multipleTable.toggleRowSelection(item, true); //切换该子节点选中状态
+
+                                    /*
+                                    方法名                    说明                                      参数
+                                                         用于多选表格，切换某一行的选中状态，         row, selected
+                                    toggleRowSelection   如果使用了第二个参数，则是设置这一行
+                                                         选中与否（selected 为 true 则选中）
+                                     */
+
+
+                                    if(item.children){
+
+                                            item.children.map((thirdItem)=>{
+                                                this.$refs.multipleTable.toggleRowSelection(thirdItem,true);
+                                                thirdItem.isChecked=true;
+                                            });
+
+                                    }
+
+                                    item.isChecked = true;
+                                });
+                                row.isChecked = true; //当前行isChecked标志元素切换为false
+                            } else {
+                                row.children.map((item) => {
+                                    this.$refs.multipleTable.toggleRowSelection(item, false);
+                                    if(item.children){
+                                        item.children.map((thirdItem)=>{
+                                            this.$refs.multipleTable.toggleRowSelection(thirdItem, false);
+                                            thirdItem.isChecked=false;
+                                        })
+                                    }
+                                    item.isChecked = false;
+                                });
+                                row.isChecked = false;
+                            }
+                            // console.log(this.multipleSelection, row);
+                        }
+                    },
+                    selectAll(selection) {
+                        // selection 是选中的数据集合
+                        this.$refs.multipleTable.data.map((items) => { //使用$ref获取注册的子组件信息，用data获取所有行，并用map函数遍历行
+                            if (items.children) {
+                                if (!items.isChecked) { //若遍历出来的行未选中
+                                    this.$refs.multipleTable.toggleRowSelection(items, true); //行变为选中状态
+                                    items.isChecked = true; //更新标志参数
+                                    items.children.map((item) => { //遍历子节点并改变状态与标志参数
+                                        this.$refs.multipleTable.toggleRowSelection(item, true);
+
+                                        if(item.children){
+                                            item.children.map((thirItem)=>{
+                                                this.$refs.multipleTable.toggleRowSelection(thirItem, true);
+                                                thirItem.isChecked=true;
+                                            })
+                                        }
+                                        item.isChecked = true;
+                                    });
+                                } else { //选中状态同理
+                                    this.$refs.multipleTable.toggleRowSelection(items, false);
+                                    items.isChecked = false;
+                                    items.children.map((item) => {
+                                        this.$refs.multipleTable.toggleRowSelection(item, false);
+                                        if(item.children){
+                                            item.children.map((thirItem)=>{
+                                                this.$refs.multipleTable.toggleRowSelection(thirItem, false);
+                                                thirItem.isChecked=false;
+                                            })
+                                        }
+                                        item.isChecked = false;
+                                    });
+                                }
+                            }
+                            else{
+                                if (!items.isChecked) items.isChecked = true;
+                                else items.isChecked = false;
+                            }
+                        });
+                        // console.log(this.orgs)
+                    },
+
+                    openFullScreen() {
+                        //关闭dialog
+                       // this.dialogFormVisible=false;
+                        //检查是否填写完整的信息
+                        if(this.perm.description==null || this.perm.description.length==0||this.perm.permname==null||this.perm.permname.length==0){
+                            //提示填写完整信息
+                            this.innerVisible=true;
+                        }else{
+                            var _this = this;
+                            //发送请求
+                            axios({
+                                method:'post',
+                                url:'/perm/add',
+                                responseType:'json',
+                                data: {
+                                    permName: this.perm.permname,
+                                }
+                            }).then(function(response) {
+
+                                const loading = _this.$loading({
+                                    lock: true,
+                                    text: 'Loading',
+                                    spinner: 'el-icon-loading',
+                                    background: 'rgba(0, 0, 0, 0.7)'
+                                });
+                                setTimeout(() => {
+                                    loading.close();
+                                }, 2000);
+
+                            });
+
+
+                        }
+
+
+
+                    },
+                    searchByTag(){
+                        console.log(this.select);
+                        console.log(this.input);
+
+
+                        if(this.select==1 ){  //依据名称搜索
+                            var _this=this;
+                            axios({
+                                method:'post',
+                                url:'/perm/findPerms',
+                                responseType:'json',
+                                data: {
+                                    permName: this.input,
+                                }
+
+                            }).then(function(response) {
+
+                                _this.tableData=response.data.data;
+                            });
+                        }
+                        else if(this.select==2){
+                            var _this=this;
+                            axios({
+                                method:'post',
+                                url:'/perm/findPerms',
+                                responseType:'json',
+                                data: {
+                                    url: this.input,
+                                }
+
+                            }).then(function(response) {
+                                _this.tableData=response.data.data;
+                            });
+                        }
+
+
+                    }
+                },
+            }
+        ;const app = Vue.createApp(Main);
+        app.use(ElementPlus);
+        app.mount("#app")
+
+    });
+</script>
+</body>
+</html>

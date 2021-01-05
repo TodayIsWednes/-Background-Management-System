@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.codewinter.backgroundmanagement.dao.RoleDao">
+
+    <!--
+    Role findRoleAndPermById(Long id);
+
+   Role findRoleByName(String roleName);
+
+   Role findRoleById(Long id);
+
+   List<Role> findRole(Role role);
+
+   List<Role> getAllRole();
+
+   Long save(Role role);
+
+   int deleteRole(Role role);
+
+   int deleteRoleByIds(List<Long> idList);
+
+   int updateRoleyId(Role role);
+    -->
+
+    <resultMap id="RoleBaseMap" type="Role">
+        <id column="id" property="id"/>
+        <result column="rolename" property="roleName"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="addtime" property="addTime"/>
+        <result column="updatetime" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="RolePermMap" type="Role">
+        <id column="id" property="id"/>
+        <result column="rolename" property="roleName"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="addtime" property="addTime"/>
+        <result column="updatetime" property="updateTime"/>
+        <collection property="permList" ofType="Perm">
+            <id column="pid" property="id"/>
+            <result column="ppermname" property="permName"/>
+            <result column="purl" property="url"/>
+            <result column="plevel" property="level"/>
+            <result column="pparentmodule" property="parentModule"/>
+        </collection>
+    </resultMap>
+    <select id="findRoleAndPermById" parameterType="java.lang.Long" resultMap="RolePermMap">
+        select  tr.id, tr.rolename, tr.description, tr.status,
+        tp.id as pid, tp.permname as ppermname, tp.url as purl, tp.level as plevel, tp.parentmodule as pparentmodule
+        from t_role tr, t_perm tp, t_role_perm trp where tr.id=#{id} and tr.id=trp.roleid and tp.id=trp.permid
+    </select>
+
+    <select id="findRoleByName" parameterType="java.lang.String" resultMap="RoleBaseMap">
+        select id, rolename, description, status, addtime, updatetime from t_role where rolename like concat('%',#{roleName,jdbcType=VARCHAR},'%')
+    </select>
+
+    <select id="findRoleById" parameterType="java.lang.Long" resultMap="RoleBaseMap">
+        select id, rolename, description, status, addtime, updatetime from t_role where id=#{id}
+    </select>
+
+    <select id="findRole" parameterType="Role" resultMap="RoleBaseMap">
+        select id, rolename, description, status, addtime, updatetime from t_role
+        <where>
+            <if test="id!=null"> id=#{id}</if>
+            <if test="roleName!=null and roleName!=''">AND rolename=#{roleName}</if>
+            <if test="description!=null and description!=''">AND description=#{description}</if>
+            <if test="status!=null">AND status=#{status}</if>
+            <if test="addTime!=null">AND addtime=#{addTime}</if>
+            <if test="updateTime!=null">AND updatetime=#{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="findRolesByUserId" parameterType="java.lang.Long" resultMap="RoleBaseMap">
+         select tr.id as id, rolename, description, status, addtime, updatetime from t_role tr left join t_user_role tur on tr.id=tur.roleid where tur.userid=#{id}
+    </select>
+
+    <select id="getAllRoles" resultMap="RoleBaseMap">
+        select id, rolename, description, status, addtime, updatetime from t_role
+    </select>
+
+    <insert id="save" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+        insert into t_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleName!=null and roleName!=''">rolename,</if>
+            <if test="description!=null and description!=''">description,</if>
+            <if test="addTime!=null and addTime!=''">addtime,</if>
+            <if test="updateTime!=null and updateTime!=''">updatetime,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleName!=null and roleName!=''">#{roleName},</if>
+            <if test="description!=null and description!=''">#{description},</if>
+            <if test="addTime!=null and addTime!=''">#{addTime},</if>
+            <if test="updateTime!=null and updateTime!=''">#{updateTime},</if>
+        </trim>
+    </insert>
+    <delete id="deleteRole" parameterType="Role">
+        delete from t_role
+        <where>
+            <if test="id!=null"> id=#{id}</if>
+            <if test="roleName!=null and roleName!=''">AND rolename=#{roleName}</if>
+            <if test="description!=null and description!=''">AND description=#{description}</if>
+            <if test="status!=null">AND status=#{status}</if>
+            <if test="addTime!=null">AND addtime=#{addTime}</if>
+            <if test="updateTime!=null">AND updatetime=#{updateTime}</if>
+        </where>
+    </delete>
+
+
+    <delete id="deleteRoleByIds" parameterType="java.util.List">
+        delete from t_role where 
+        id in
+        <foreach collection="idList" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
+
+    <update id="updateRoleyId" parameterType="Role">
+     update t_role
+     <set>
+
+         <if test="roleName!=null and roleName!=''">rolename=#{roleName}</if>
+         <if test="description!=null and description">description=#{description}</if>
+         <if test="status!=null">status=#{status}</if>
+         <if test="addTime!=null">addtime=#{addTime}</if>
+         <if test="updateTime!=null">updatetime=#{updateTime}</if>
+     </set>
+     where id=#{id}
+    </update>
+
+
+</mapper>
+

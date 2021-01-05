@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>文档列表 - 光年(Light Year Admin)后台管理系统模板</title>
+    <link rel="icon" th:href="@{favicon.ico}" type="image/ico">
+    <meta name="keywords" content="LightYear,光年,后台模板,后台管理系统,光年HTML模板">
+    <meta name="description" content="LightYear是一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
+    <meta name="author" content="yinqi">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+
+
+    <link th:href="@{/element/css/index-plus.css}" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.4/sweetalert2.min.css" rel="stylesheet"/>
+
+    <style>
+        .el-select .el-input {
+            width: 130px;
+        }
+        .input-with-select .el-input-group__prepend {
+            background-color: #fff;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <div  th:include="left_nav::left_nav"></div>
+        <!--End 左侧导航-->
+
+        <!--头部信息-->
+        <div  th:include="header::header"></div>
+
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+
+
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--- row start--->
+                        <div id="app">
+                            <div class="card">
+                                <div class="card-toolbar clearfix">
+                                        <el-row>
+
+                                            <el-col :span="8"><div class="grid-content">
+
+                                                <el-button type="primary" size="medium" icon="el-icon-plus" @click="dialogFormVisible = true">新建</el-button>
+                                                <el-button type="warning" size="medium" icon="el-icon-warning" @click="EnableUser">启用</el-button>
+                                                <el-button type="danger" size="medium" icon="el-icon-remove" @click="DisableUser">禁用</el-button>
+                                                <el-button type="success" size="medium" icon="el-icon-download" @click="">导出</el-button>
+                                            </div></el-col>
+                                            <el-col :span="6"><div class="grid-content bg-purple-light"></div></el-col>
+                                            <el-col :span="10"><div class="grid-content ">
+
+
+                                                    <div >
+                                                        <el-input
+                                                                placeholder="请输入内容"
+                                                                v-model="input3"
+                                                                class="input-with-select"
+                                                        >
+                                                            <template #prepend>
+                                                           用户名
+                                                            </template>
+                                                            <template #append>
+                                                                <el-button icon="el-icon-search" @click=""></el-button>
+                                                            </template>
+                                                        </el-input>
+                                                    </div>
+
+
+
+                                            </div></el-col>
+
+
+
+
+                                        </el-row>
+
+
+
+
+                                </div>
+
+
+                                <div class="card-body">
+
+                                    <div class="table-responsive">
+
+                                        <!----
+
+                                        "id":1,"userName":"root","passWord":null,"salt":null,"status":1,"createTime":"202
+
+                                        -->
+                                        <!------ start ------>
+                                        <el-table
+                                                ref="multipleTable"
+                                                :data="tableData"
+                                                tooltip-effect="dark"
+                                                style="width: 100%"
+                                                @selection-change="handleSelectionChange">
+                                            <el-table-column
+                                                    type="selection"
+                                                    width="55">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="id"
+                                                    label="ID"
+                                                    width="120">
+
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="userName"
+                                                    label="用户名"
+                                                    width="120">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="status"
+                                                    label="状态"
+                                                    width="120">
+
+                                            </el-table-column>
+
+                                            <el-table-column
+
+                                                    label="操作"
+                                                    show-overflow-tooltip>
+                                                <template #default="scope">
+                                                    <el-button type="primary" icon="el-icon-edit"  @click="handleModify(scope.$index, scope.row)" circle></el-button>
+                                                    <el-button type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)" circle></el-button>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="createTime"
+                                                    label="添加时间"
+                                                    show-overflow-tooltip>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="updateTime"
+                                                    label="更新时间"
+                                                    show-overflow-tooltip>
+                                            </el-table-column>
+                                        </el-table>
+                                        <!----
+                                        <div style="margin-top: 20px">
+                                            <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
+                                            <el-button @click="toggleSelection()">取消选择</el-button>
+                                        </div>
+                                        ---->
+                                        <!------ end  ------>
+                                    </div>
+
+
+                                    <div class="block">
+                                        <el-pagination style="margin-top: 15px"
+                                                       background
+                                                @size-change="handleSizeChange"
+                                                @current-change="handleCurrentChange"
+                                                       v-model:current-page="currentPage"
+                                                :page-sizes="[10, 20, 30, 40]"
+                                                :page-size="currentSize"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="totalPage">
+                                        </el-pagination>
+                                    </div>
+
+
+                                </div>
+
+
+                                <div>
+                                    <el-dialog title="收货地址" v-model="dialogFormVisible">
+                                        <el-form :model="user">
+
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="用户名" :label-width="formLabelWidth">
+                                                    <el-input v-model="user.username" autocomplete="off"></el-input>
+                                                     </el-form-item>
+                                                    <div class="grid-content bg-purple"></div>
+                                                </el-col>
+                                                <el-col :span="12">
+                                                    <el-form-item label="初始密码" :label-width="formLabelWidth">
+                                                    <el-input v-model="user.password" autocomplete="off"></el-input>
+                                                    </el-form-item>
+                                                    <div class="grid-content bg-purple"></div>
+                                                </el-col>
+                                            </el-row>
+
+                                            <el-row>
+
+                                                <el-form-item label="用户状态" :label-width="formLabelWidth">
+                                                    <el-select v-model="user.type" placeholder="请设置用户状态">
+                                                        <el-option label="未启用" value="0"></el-option>
+                                                        <el-option label="启用" value="1"></el-option>
+                                                        <el-option label="禁用" value="2"></el-option>
+                                                    </el-select>
+                                                </el-form-item>
+
+                                            </el-row>
+
+
+
+                                        </el-form>
+                                        <template #footer>
+                                            <span class="dialog-footer">
+                                              <el-button @click="dialogFormVisible = false">取 消</el-button>
+                                              <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                                            </span>
+                                        </template>
+                                    </el-dialog>
+
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--- row end--->
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/perfect-scrollbar.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.4/sweetalert2.min.js"></script>
+
+<script type="text/javascript" th:src="@{/element/js/vue.global.js}"></script>
+<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/element/js/index.full.js}"></script>
+
+<script>
+    var Main = {
+            data() {
+                return {
+
+                    input3:"",
+                    tableData:[],
+                    multipleSelection: [],
+                    dialogTableVisible: false,
+                    dialogFormVisible: false,
+                    form: {
+                        name: '',
+                        region: '',
+                        date1: '',
+                        date2: '',
+                        delivery: false,
+                        type: [],
+                        resource: '',
+                        desc: ''
+                    },
+                    user:{
+                        username:'',
+                        password:'',
+                        type:''
+                    },
+                    selectedUserIds:[
+
+                    ],
+                    formLabelWidth: '120px',
+                    currentSize:5,
+                    totalPage:0,
+                    currentPage:1,
+
+                }
+            },
+
+            methods: {
+                toggleSelection(rows) {
+                    if (rows) {
+                        rows.forEach(row => {
+                            this.$refs.multipleTable.toggleRowSelection(row);
+                        });
+                    } else {
+                        this.$refs.multipleTable.clearSelection();
+                    }
+                },
+                handleSelectionChange(val) {
+                    console.log(val);
+                    this.multipleSelection = val;
+
+                    this.selectedUserIds=new Array();
+                    for(i=0;i<val.length;i++){
+                        this.selectedUserIds.push(val[i].id);
+                    }
+                    console.log(this.selectedUserIds);
+
+                },
+                handleModify(index, row){
+                    window.location.href = "http://localhost:8080/user/edit/"+row.id;
+                },
+                handleDelete(index,row){
+                    var id=row.id;
+                    //发送请求
+                    axios({
+                        method:"post",
+                        url:"/user/delete/"+id
+                    }).then((response)=>{
+                        var data=response.data;
+                        console.log(data);
+                    })
+
+                },
+
+                EnableUser(){
+
+                    //获取被禁用的user的id判断是否为空
+                   if(this.selectedUserIds.length>0){
+                       // 获取远端图片
+                       axios({
+                           method:'post',
+                           url:'/user/updateUsers',
+                           responseType:'json',
+                           data:{
+                               'ids':this.selectedUserIds,
+                               'type':'status-enable'
+                           }
+                       }).then(function(response) {
+                               console.log(response.data);
+                           });
+
+                   }else{
+
+                   }
+                    //发送请求修改用户状态
+                },
+                DisableUser(){
+                    //获取被禁用的user的id判断是否为空
+                    console.log(this.$refs.multipleTable.selection);
+
+                    //发送请求修改用户状态
+                    if(this.selectedUserIds.length>0){
+                        // 获取远端图片
+                        axios({
+                            method:'post',
+                            url:'/user/updateUsers',
+                            responseType:'json',
+                            data:{
+                                'ids':this.selectedUserIds,
+                                'type':'status-disable'
+                            }
+                        }).then(function(response) {
+                            console.log(response.data);
+                        });
+
+                    }else{
+
+                    }
+
+                },
+                handleSizeChange(val) {
+
+                    this.currentSize = val;
+
+                    if((this.totalPage/this.currentSize)<1){
+                        this.currentPage=1;
+                    }
+                    var _this=this;
+                    axios({
+                        method:"get",
+                        url:"/user/get/"+_this.currentPage+"/"+_this.currentSize,
+                        responseType:"json"
+                    }).then((response)=>{
+                        var page=response.data.data;
+                        var data=page.list;
+
+                        _this.currentSize=page.pageSize;
+
+                        _this.currentPage=data.pageNum;
+
+                        _this.totalPage=page.total;
+
+                        _this.tableData=data;
+                    });
+                },
+                handleCurrentChange(val) {
+                    var _this=this;
+                    //发送请求
+                    axios({
+                        method:'get',
+                        url:'/user/get/'+_this.currentPage+'/'+_this.currentSize
+                    }).then((response)=>{
+                        var page=response.data.data;
+                        var data=page.list;
+                        _this.currentSize=page.pageSize;
+                        _this.totalPage=page.total;
+                        _this.currentPage=page.pageNum;
+                        _this.tableData=data;
+
+                    });
+                }
+
+            }
+            ,
+        created(){
+                var _this=this;
+                axios({
+                    method:"get",
+                    url:"/user/get/1/5",
+                    responseType:""
+                }).then((response)=>{
+                    var page=response.data.data;
+                    var data=page.list;
+
+                    _this.currentSize=page.pageSize;
+
+                    _this.currentPage=data.pageNum;
+
+                    _this.totalPage=page.total;
+
+                    _this.tableData=data;
+                });
+        }
+    }
+    ;const app = Vue.createApp(Main);
+    app.use(ElementPlus);
+
+    app.mount("#app")
+</script>
+</body>
+</html>

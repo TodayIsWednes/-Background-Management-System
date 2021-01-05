@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>文档列表 - 光年(Light Year Admin)后台管理系统模板</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/ico">
+    <meta name="keywords" content="LightYear,光年,后台模板,后台管理系统,光年HTML模板">
+    <meta name="description" content="LightYear是一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
+    <meta name="author" content="yinqi">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.4/sweetalert2.min.css" rel="stylesheet"/>
+
+</head>
+
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <div  th:include="left_nav::left_nav"></div>
+        <!--End 左侧导航-->
+
+        <!--头部信息-->
+        <div  th:include="header::header"></div>
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-toolbar clearfix">
+                                <form class="pull-right search-bar" method="get" action="#!" role="form">
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <input type="hidden" name="search_field" id="search-field" value="title">
+                                            <button class="btn btn-default dropdown-toggle" id="search-btn" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+                                                标题 <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li> <a tabindex="-1" href="javascript:void(0)" data-field="title">角色名</a> </li>
+                                                <li> <a tabindex="-1" href="javascript:void(0)" data-field="cat_name">角色描述</a> </li>
+                                                <li> <a tabindex="-1" href="javascript:void(0)" data-field="cat_name">角色状态</a> </li>
+                                                <li> <a tabindex="-1" href="javascript:void(0)" data-field="cat_name">日期</a> </li>
+                                            </ul>
+                                        </div>
+
+                                        <input type="text" class="form-control" value="" name="keyword" placeholder="请输入名称">
+                                    </div>
+                                </form>
+
+
+                                <div class="toolbar-btn-action">
+                                    <a class="btn btn-primary m-r-5" href="#!" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="mdi mdi-plus"></i> 新增</a>
+                                    <a class="btn btn-success m-r-5" id="enble-btn" href="#!"><i class="mdi mdi-check"></i> 启用</a>
+                                    <a class="btn btn-warning m-r-5" id="disabled-btn" href="#!"><i class="mdi mdi-block-helper"></i> 禁用</a>
+                                    <a class="btn btn-danger m-r-5" id="delete-btn" href="#!"><i class="mdi mdi-window-close"></i> 删除</a>
+                                    <a class="btn btn-info m-r-5" id="download-btn" href="#!"><i class="mdi mdi-cloud-download"></i>导出</a>
+
+                                </div>
+
+                            </div>
+
+
+                            <font class="card-body">
+
+                                <font class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                <label class="lyear-checkbox checkbox-primary">
+                                                    <input type="checkbox" id="check-all"><span></span>
+                                                </label>
+                                            </th>
+                                            <th>编号</th>
+                                            <th>角色名</th>
+                                            <th>角色描述</th>
+                                            <th>创建时间</th>
+                                            <th>状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <tr  th:each="role,roleStat : ${RoleList.list}">
+                                            <td>
+                                                <label class="lyear-checkbox checkbox-primary">
+                                                    <input type="checkbox" name="ids" th:value="${role.id}"><span></span>
+                                                </label>
+                                            </td>
+                                            <td th:text="${roleStat.count}"></td>
+                                            <td th:text="${role.roleName}"></td>
+                                            <td th:text="${role.description}"></td>
+                                            <td th:text="${#dates.format(role.addTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+
+
+
+
+                                            <td th:switch = "${role.status}" >
+                                                <font class="text-danger"  th:case="0" th:text = "未启用" ></font>
+                                                <font class="text-success" th:case="1" th:text = "启用" ></font>
+                                                <font class="text-warning" th:case="2" th:text = "禁用" ></font>
+
+                                            </td>
+
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-xs btn-default" th:href="@{'/role/get/'+${role.id}}" title="查看" data-toggle="tooltip"><i class="mdi mdi-chevron-double-right"></i></a>
+                                                    <a class="btn btn-xs btn-default" href="#!" title="编辑" data-toggle="tooltip"><i class="mdi mdi-pencil"></i></a>
+                                                    <a class="btn btn-xs btn-default" href="#!" title="删除" data-toggle="tooltip"><i class="mdi mdi-window-close"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+
+
+                                        </tbody>
+                                    </table>
+
+                                </font>
+                                </div>
+
+                                <ul class="pagination">
+                                    <li>共[[${RoleList.getTotal()}]]条</li>
+                                    <li ><a th:href="@{'/role/get/'+${RoleList.getNavigateFirstPage()}+'/'+${RoleList.getPageSize()}}">«</a></li>
+                                    <li class="active"><a  th:href="@{'/role/get/'+${RoleList.getPageNum()}+'/'+${RoleList.getPageSize()}}"th:text="${RoleList.getPageNum()}"></a></li>
+
+                                    <li th:if="${RoleList.getPageNum()+1} lt ${RoleList.getPages()}">
+                                        <a  th:href="@{'/role/get/'+${RoleList.getPageNum()+1}+'/'+${RoleList.getPageSize()}}" th:text="${RoleList.getPageNum()+1}"></a>
+                                    </li>
+                                    <li th:if="${RoleList.getPageNum()+2} lt ${RoleList.getPages()}">
+                                        <a  th:href="@{'/role/get/'+${RoleList.getPageNum()+2}+'/'+${RoleList.getPageSize()}}" th:text="${RoleList.getPageNum()+2}"></a>
+                                    </li>
+                                    <li th:if="${RoleList.getPageNum()+3} lt ${RoleList.getPages()}">
+                                        <a  th:href="@{'/role/get/'+${RoleList.getPageNum()+3}+'/'+${RoleList.getPageSize()}}" th:text="${RoleList.getPageNum()+3}"></a>
+                                    </li>
+                                    <li th:if="${RoleList.getPageNum()+4} lt ${RoleList.getPages()}">
+                                        <a  th:href="@{'/role/get/'+${RoleList.getPageNum()+4}+'/'+${RoleList.getPageSize()}}" th:text="${RoleList.getPageNum()+4}"></a>
+                                    </li>
+
+
+                                    <li class="disabled"><span>...</span></li>
+
+                                    <li >
+                                        <a  th:href="@{'/role/get/'+${RoleList.getPageSize()}+'/'+${RoleList.getPageSize()}}" th:text="${RoleList.getPages()}">»</a>
+                                    </li>
+
+                                    <li>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                20条/页 <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#!">10条/页</a></li>
+                                                <li><a href="#!">30条/页</a></li>
+                                                <li><a href="#!">50条/页</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+
+<!--------------------------------------------------------------------------------->
+
+
+<button type="button" class="btn btn-primary" >打开模态框 for @mdo</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">新消息</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="role-name" class="control-label">角色名称：</label>
+                        <input type="text" class="form-control" id="role-name" name="rolename">
+                    </div>
+                    <div class="form-group">
+                        <label for="role-description" class="control-label">角色描述：</label>
+                        <textarea class="form-control" id="role-description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">发送消息</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/perfect-scrollbar.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.4/sweetalert2.min.js"></script>
+<script type="text/javascript">
+    function getSelectedInputValueByName( inputName){
+        var inputArray=new Array();
+        $("input:checkbox[name='"+inputName+"']:checked").each(function(index,elements){
+            inputArray.push($(this).val());
+        })
+        return inputArray;
+    }
+
+
+    $(document).ready(function(){
+
+        //点击启用按钮
+        $("#enble-btn").click(function(){
+            //1.获取勾选的表单复选框的值
+            var inputArrayValues=getSelectedInputValueByName('ids');
+
+            //2.判断是否选中了数据
+            if($.isEmptyObject(inputArrayValues)||inputArrayValues.length<=0){
+                Swal.fire(
+                    '提示!',
+                    '请选中数据.',
+                    'error'
+                )
+            }else{
+                //id数组转为json字符串
+                var jsonStr = JSON.stringify(inputArrayValues);
+
+                Swal.fire({
+                    title: '你确定吗?',
+                    text: '这些角色将会被启用!',
+                    icon: 'info',
+                    confirmButtonColor: "#15c377",
+                    showCancelButton: true,
+                    confirmButtonText: '是的, 启用他们!',
+                    cancelButtonText: '不, 不想了'
+                }).then((result) => {
+                    if (result.value) {
+                        //2.发送post请求到server
+                        $.ajax({
+                            url:"/role/update",
+                            type:'post',
+                            dataType:'json',
+                            data:{
+                                "operation":"status-enable",
+                                "data":jsonStr,
+                            },
+                            success:function(data){
+                                console.log(data);
+                                Swal.fire(
+                                    '好的!',
+                                    '这些角色已经被启用.',
+                                    'success'
+                                )
+                            },
+                            error:function(data){
+                                Swal.fire(
+                                    '哦或!',
+                                    '启用角色失败，请检查网络是否在线！',
+                                    'fail'
+                                )
+                            }
+
+                        })
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                    }
+                });
+            }
+
+
+        })
+
+        //点击禁用按钮
+        $("#disabled-btn").click(function(){
+           var inputArrayValues= getSelectedInputValueByName("ids");
+           if(inputArrayValues.length<=0||$.isEmptyObject(inputArrayValues)){
+               Swal.fire(
+                   '提示!',
+                   '请选中数据.',
+                   'error'
+               )
+           }else{
+               var jsonStr=JSON.stringify(inputArrayValues);
+
+               Swal({
+                   title: '你确定吗?',
+                   text: '这些角色将会被禁用启用!',
+                   icon: 'warning',
+                   confirmButtonColor: "#15c377",
+                   showCancelButton: true,
+                   confirmButtonText: '是的, 禁用用他们!',
+                   cancelButtonText: '不, 不想了'
+                   }).then((result)=>{
+
+                   if (result.value) {
+                       //2.发送post请求到server
+                       $.ajax({
+                           url:"/role/update",
+                           type:'post',
+                           dataType:'json',
+                           data:{
+                               "operation":"status-disable",
+                               "data":jsonStr,
+                           },
+                           success:function(data){
+                               console.log(data);
+                               Swal.fire(
+                                   '好的!',
+                                   '这些角色已经被禁用.',
+                                   'success'
+                               )
+                           },
+                           error:function(data){
+                               Swal.fire(
+                                   '哦或!',
+                                   '启用角色失败，请检查网络是否在线！',
+                                   'fail'
+                               )
+                           }
+
+                       })
+                   } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+
+
+                   }
+
+
+               })
+
+           }
+        })
+
+
+        //点击删除按钮
+        $("#delete-btn").click(function(){
+            var inputArrayValues= getSelectedInputValueByName("ids");
+            if(inputArrayValues.length<=0||$.isEmptyObject(inputArrayValues)){
+                Swal.fire(
+                    '提示!',
+                    '请选中数据.',
+                    'error'
+                )
+            }else {
+                var jsonStr = JSON.stringify(inputArrayValues);
+                Swal.fire({
+                    title: '你确定吗?',
+                    text: '这些角色将会被删除!',
+                    icon: 'info',
+                    confirmButtonColor: "#15c377",
+                    showCancelButton: true,
+                    confirmButtonText: '是的, 删除他们!',
+                    cancelButtonText: '不, 不想了'
+                }).then((result) => {
+                    if (result.value) {
+                        //2.发送post请求到server
+                        $.ajax({
+                            url:"/role/delete",
+                            type:'post',
+                            dataType:'json',
+                            data:{
+                                "operation":"delete",
+                                "data":jsonStr,
+                            },
+                            success:function(data){
+                                console.log(data);
+                                Swal.fire(
+                                    {title:"删除成功！",
+                                        text:"这些角色已经被删除 .",
+                                        type:"success"
+                                    },function(){
+                                        window
+                                    }
+                                )
+                            },
+                            error:function(data){
+                                Swal.fire(
+                                    '哦或!',
+                                    '删除角色失败，请检查网络是否在线！',
+                                    'fail'
+                                )
+                            }
+
+                        })
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                    }
+                });
+
+
+            }
+        })
+
+
+    })
+
+
+
+</script>
+</body>
+</html>

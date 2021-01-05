@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.codewinter.backgroundmanagement.dao.PermDao">
+
+    <!--
+   Perm findPermById(Long id);
+
+   Perm findPermByName(String permName);
+
+   List<Perm> findPerm(Perm perm);
+
+   List<Perm> findAllPerms();
+
+   int save(Perm perm);
+
+   int deletePerm(Perm perm);
+
+   int updatePermById(Perm perm);
+
+      private Long id;
+   private String permName;
+   private String url;
+   private int level;
+   private Long parentModule;
+   private Character visible;
+   private Character type;
+   private String authorityString;
+    -->
+
+
+
+    <resultMap id="PermBaseMap" type="Perm">
+        <id column="id" property="id"/>
+        <result column="permname" property="permName"/>
+        <result column="url" property="url"/>
+        <result column="level" property="level"/>
+        <result column="parentmodule" property="parentModule"/>
+        <result column="visible" property="visible"/>
+        <result column="type" property="type"/>
+        <result column="authoritystring" property="authorityString"/>
+        <result column="addtime" property="addTime"/>
+        <result column="updatetime" property="updateTime"/>
+    </resultMap>
+
+    <select id="findPermById" resultMap="PermBaseMap" parameterType="java.lang.Long">
+        select id, permname, url, level, parentmodule, visible, type, authoritystring, addtime, updatetime
+        from t_perm where id=#{id}
+    </select>
+    <select id="findPermByName" parameterType="java.lang.String" resultMap="PermBaseMap">
+        select id, permname, url, level, parentmodule, visible, type, authoritystring, addtime, updatetime
+        from t_perm where permname like concat('%',#{permName,jdbcType=VARCHAR},'%')
+    </select>
+
+    <select id="findPerm" parameterType="Perm" resultMap="PermBaseMap">
+        select id, permname, url, level, parentmodule, visible, type, authoritystring, addtime, updatetime
+        from t_perm
+        <where>
+            <if test="id!=null">id=#{id}</if>
+            <if test="permName!=null and permName!=''">AND permname LIKE concat('%',#{permName},'%')</if>
+            <if test="url!=null and url!=''">AND url LIKE concat('%',#{url},'%')</if>
+            <if test="level!=level and level!=''">AND level=#{level}</if>
+            <if test="parentModule!=null">AND parentmodule=#{parentModule}</if>
+            <if test="visible!=null and visible!=''">AND visible=#{visible}</if>
+            <if test="type!=null and type!=''">AND type=#{type}</if>
+            <if test="authorityString!=null and authorityString!=''">AND authoritystring=#{authorityString}</if>
+            <if test="addTime!=null">AND addtime=#{addTime}</if>
+            <if test="updateTime!=null">AND updatetime=#{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="findAllPerms" resultMap="PermBaseMap" parameterType="java.lang.Long">
+        select id, permname, url, level, parentmodule, sequence, visible, type, authoritystring, addtime, updatetime
+        from t_perm order by sequence;
+    </select>
+
+    <select id="findPermByRoleId" parameterType="java.lang.Long" resultMap="PermBaseMap">
+     select tp.id as id, tp.permname as pername, tp.url as url, tp.level as level, tp.parentmodule as perentmodule,
+     tp.sequence as sequence, tp.visible visible, tp.type as type, tp.authoritystring as authoritystring,
+     tp.addtime addtime, tp.updatetime as updatetime
+     from t_perm tp left join t_role_perm trp on t_perm.id= trp.order.permid where trp.roleid=#{roleId};
+    </select>
+
+    <insert id="save" parameterType="Perm" useGeneratedKeys="true" keyProperty="id">
+        insert into t_perm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permName!=null and permName!=''">permname,</if>
+            <if test="url!=null and url!=''"> url,</if>
+            <if test="level!=level and level!=''">level,</if>
+            <if test="parentModule!=null"> parentmodule,</if>
+            <if test="visible!=null and visible!=''">visible,</if>
+            <if test="type!=null and type!=''">type,</if>
+            <if test="authorityString!=null and authorityString!=''">authoritystring,</if>
+            <if test="addTime!=null">addtime,</if>
+            <if test="updateTime!=null">updatetime,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permName!=null and permName!=''">#{permName},</if>
+            <if test="url!=null and url!=''">#{url},</if>
+            <if test="level!=level and level!=''">#{level},</if>
+            <if test="parentModule!=null">#{parentModule},</if>
+            <if test="visible!=null and visible!=''">#{visible},</if>
+            <if test="type!=null and type!=''">#{type},</if>
+            <if test="authorityString!=null and authorityString!=''">#{authorityString},</if>
+            <if test="addTime!=null">#{addTime},</if>
+            <if test="updateTime!=null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <delete id="deletePerm" parameterType="Perm">
+        delete from t_perm
+        <where>
+            <if test="id!=null">id=#{id}</if>
+            <if test="permName!=null and permName!=''">permname=#{permName}</if>
+            <if test="url!=null and url!=''">AND url=#{url}</if>
+            <if test="level!=level and level!=''">AND level=#{level}</if>
+            <if test="parentModule!=null">AND parentmodule=#{parentModule}</if>
+            <if test="visible!=null and visible!=''">AND visible=#{visible}</if>
+            <if test="type!=null and type!=''">AND type=#{type}</if>
+            <if test="authorityString!=null and authorityString!=''">AND authoritystring=#{authorityString}</if>
+            <if test="addTime!=null and addTime!=''">AND addtime=#{addTime}</if>
+            <if test="updateTime!=null and updateTime!=''">AND updatetime=#{updateTime}</if>
+        </where>
+    </delete>
+
+    <update id="updatePermById" parameterType="Perm">
+        update t_perm
+        <set>
+            <if test="permName!=null and permName!=''">permname=#{permName},</if>
+            <if test="url!=null and url!=''"> url=#{url},</if>
+            <if test="level!=level and level!=''">level=#{level},</if>
+            <if test="parentModule!=null">parentmodule=#{parentModule},</if>
+            <if test="visible!=null and visible!=''">visible=#{visible},</if>
+            <if test="type!=null and type!=''">type=#{type},</if>
+            <if test="authorityString!=null and authorityString!=''">authoritystring=#{authorityString},</if>
+            <if test="addTime!=null and addTime!=''">addtime=#{addTime},</if>
+            <if test="updateTime!=null and updateTime!=''">updatetime=#{updateTime},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

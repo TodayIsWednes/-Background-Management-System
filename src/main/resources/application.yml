@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: bm
+  thymeleaf:
+    cache: false
+    suffix: .html
+    prefix: classpath:/templates/
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456/*-
+    url: jdbc:mysql://localhost:3306/backgroudmanagement?characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+
+
+mybatis:
+  mapper-locations: classpath:com/codewinter/backm/*.xml
+  type-aliases-package: com.codewinter.backgroundmanagement.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
