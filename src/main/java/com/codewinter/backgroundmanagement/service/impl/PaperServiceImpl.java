@@ -44,9 +44,9 @@ public class PaperServiceImpl implements PaperService {
    }
 
    @Override
-   public PageInfo<Paper> findAllPapers(int pageNum,int pageSize) {
+   public PageInfo<Paper> getAllPapers(int pageNum,int pageSize) {
       PageHelper.offsetPage(pageNum,pageSize);
-      List<Paper> list=paperDao.findAllPapers();
+      List<Paper> list=paperDao.getAllPapers();
       PageInfo<Paper> pageInfo=new PageInfo<>();
       pageInfo.setList(list);
       return pageInfo;

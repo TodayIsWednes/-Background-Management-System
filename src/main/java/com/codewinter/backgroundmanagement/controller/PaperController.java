@@ -3,11 +3,17 @@ package com.codewinter.backgroundmanagement.controller;
 
 import com.codewinter.backgroundmanagement.entity.Paper;
 import com.codewinter.backgroundmanagement.service.PaperService;
+import com.codewinter.backgroundmanagement.tool.CommonReturnType;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.rmi.MarshalledObject;
 
 @Controller
 @RequestMapping("/paper")
@@ -69,14 +75,15 @@ public class PaperController {
 
    }
    //查找所有试卷
-   @RequestMapping("/findAll/{pageNum}/{pageSize}")
-   public String findAllPapers(@PathVariable("pageNum") int pageNum,@PathVariable("pageSize") int pageSize){
-      PageInfo<Paper> pageInfo=paperService.findAllPapers(pageNum,pageSize);
-      if(pageInfo!=null){
-         return "sucess";
-      }else{
-         return "fail";
-      }
+   @RequestMapping("/get/{pageNum}/{pageSize}")
+   @ResponseBody
+   public CommonReturnType getAllPapers(@PathVariable("pageNum") int pageNum, @PathVariable("pageSize") int pageSize){
+      PageInfo<Paper> pageInfo=paperService.getAllPapers(pageNum,pageSize);
+
+      CommonReturnType commonReturnType=new CommonReturnType();
+      commonReturnType.setStatus("200");;
+      commonReturnType.setData(pageInfo);
+      return commonReturnType;
    }
 
    //查找指定试卷-下的所有试题信息
@@ -103,5 +110,14 @@ public class PaperController {
    //试卷添加试题-填空题
 
    //试卷添加试题-简答题
+
+
+   @RequestMapping("/view")
+   public ModelAndView  paperView(){
+      ModelAndView modelAndView=new ModelAndView();
+      modelAndView.setViewName("paper-list");
+      return modelAndView;
+   }
+
 
 }

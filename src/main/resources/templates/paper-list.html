@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>文档列表 - 光年(Light Year Admin)后台管理系统模板</title>
+    <link rel="icon" href="/favicon.ico" type="image/ico">
+    <meta name="keywords" content="LightYear,光年,后台模板,后台管理系统,光年HTML模板">
+    <meta name="description" content="LightYear是一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
+    <meta name="author" content="yinqi">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+
+
+    <link th:href="@{/element/css/index-plus.css}" rel="stylesheet">
+
+</head>
+
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <div  th:include="left_nav::left_nav"></div>
+        <!--End 左侧导航-->
+
+        <!--头部信息-->
+        <div  th:include="header::header"></div>
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+
+            <div id="app">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-toolbar clearfix">
+                                    <el-row>
+
+
+                                        <el-col :span="10"><div class="grid-content">
+                                            <!--button-->
+                                            <el-row>
+                                                <el-button type="primary" icon="el-icon-plus">新增</el-button>
+                                                <el-button type="success" icon="el-icon-delete">删除</el-button>
+                                                <el-button type="warning" icon="el-icon-success">启用</el-button>
+                                                <el-button type="danger" icon="el-icon-error">禁用</el-button>
+                                            </el-row>
+
+
+
+                                        </div></el-col>
+                                        <el-col :span="6"><div class="grid-content"></div></el-col>
+
+                                        <el-col :span="8"><div class="grid-content ">
+
+                                            <!--- 搜索框-->
+                                            <div>
+                                                <el-input
+                                                        placeholder="请输入内容"
+                                                        v-model="input3"
+                                                        class="input-with-select"
+                                                >
+                                                    <template #prepend>
+                                                        <el-select v-model="select" placeholder="请选择">
+                                                            <el-option label="餐厅名" value="1"></el-option>
+                                                            <el-option label="订单号" value="2"></el-option>
+                                                            <el-option label="用户电话" value="3"></el-option>
+                                                        </el-select>
+                                                    </template>
+                                                    <template #append>
+                                                        <el-button icon="el-icon-search"></el-button>
+                                                    </template>
+                                                </el-input>
+                                            </div>
+
+                                        </div></el-col>
+
+
+                                </el-row>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="table-responsive">
+
+                                        <el-table
+                                                ref="multipleTable"
+                                                :data="tableData"
+                                                tooltip-effect="dark"
+                                                style="width: 100%"
+                                                @selection-change="handleSelectionChange">
+                                            <el-table-column
+                                                    type="selection"
+                                                    width="55">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label="日期"
+                                                    width="120">
+                                                <template #default="scope">{{ scope.row.date }}</template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="name"
+                                                    label="姓名"
+                                                    width="120">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    prop="address"
+                                                    label="地址"
+                                                    show-overflow-tooltip>
+                                            </el-table-column>
+                                        </el-table>
+
+                                        <!-- table -->
+                                    </div>
+
+                                    <div class="block" style="margin-top: 15px;">
+                                        <el-pagination
+                                                @size-change="handleSizeChange"
+                                                @current-change="handleCurrentChange"
+                                                :current-page="currentPage4"
+                                                :page-sizes="[100, 200, 300, 400]"
+                                                :page-size="100"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="400">
+                                        </el-pagination>
+                                    </div>
+
+                                    <!-- pagenation -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/perfect-scrollbar.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/element/js/vue.global.js}"></script>
+<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/element/js/index.full.js}"></script>
+
+<script>
+
+    var Main = {
+            data() {
+                return {
+                    tableData: [{
+                        date: '2016-05-03',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-02',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-04',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-08',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-06',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-07',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }],
+                    multipleSelection: [],
+                    currentPage1: 5,
+                    currentPage2: 5,
+                    currentPage3: 5,
+                    currentPage4: 4
+                }
+            },
+
+            methods: {
+                toggleSelection(rows) {
+                    if (rows) {
+                        rows.forEach(row => {
+                            this.$refs.multipleTable.toggleRowSelection(row);
+                        });
+                    } else {
+                        this.$refs.multipleTable.clearSelection();
+                    }
+                },
+                handleSelectionChange(val) {
+                    this.multipleSelection = val;
+                },
+                handleSizeChange(val) {
+                    console.log(`每页 ${val} 条`);
+                },
+                handleCurrentChange(val) {
+                    console.log(`当前页: ${val}`);
+                }
+            }
+        }
+    ;const app = Vue.createApp(Main);
+    app.use(ElementPlus);
+    app.mount("#app")
+</script>
+</body>
+</html>

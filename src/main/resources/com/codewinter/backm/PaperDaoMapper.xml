@@ -51,7 +51,7 @@
         </where>
     </select>
 
-    <select id="findAllPapers" resultMap="PaperMap">
+    <select id="getAllPapers" resultMap="PaperMap">
       select id, papername, testtime, duration, courseid, totalscore, status, createtime, updatetime from t_paper
     </select>
 

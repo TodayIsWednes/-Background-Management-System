@@ -14,7 +14,7 @@ public interface PaperDao {
    /*条件查询*/
    List<Paper> findPaper(Paper paper);
 
-   List<Paper> findAllPapers();
+   List<Paper> getAllPapers();
    int save(Paper paper);
    int deletePaper(Paper paper);
    int updatePaperById(Paper paper);

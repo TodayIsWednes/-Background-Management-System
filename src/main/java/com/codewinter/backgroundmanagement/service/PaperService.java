@@ -16,7 +16,7 @@ public interface PaperService {
 
     PageInfo<Paper> findPaper(Paper paper,int pageNum,int pageSize);
 
-   PageInfo<Paper> findAllPapers(int pageNum,int pageSize);
+   PageInfo<Paper> getAllPapers(int pageNum,int pageSize);
 
    int save(Paper paper);
    /**条件删除**/
