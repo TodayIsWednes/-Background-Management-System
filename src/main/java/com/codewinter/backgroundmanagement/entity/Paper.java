@@ -21,11 +21,15 @@ public class Paper {
    private Long id;
    private String paperName;
 
-   private Date testTime;
    private int duration;
    private Long courseId;
    private int totalScore;
    private int status;
+
+
+   @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+   @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+   private Date testTime;
 
    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")

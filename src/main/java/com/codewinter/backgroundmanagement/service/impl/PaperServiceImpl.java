@@ -36,7 +36,7 @@ public class PaperServiceImpl implements PaperService {
 
    @Override
    public PageInfo<Paper> findPaper(Paper paper,int pageNum,int pageSize) {
-      PageHelper.offsetPage(pageNum,pageSize);
+      PageHelper.startPage(pageNum,pageSize);
       List<Paper> list= paperDao.findPaper(paper);
       PageInfo<Paper> pageInfo=new PageInfo<>();
       pageInfo.setList(list);
@@ -45,7 +45,7 @@ public class PaperServiceImpl implements PaperService {
 
    @Override
    public PageInfo<Paper> getAllPapers(int pageNum,int pageSize) {
-      PageHelper.offsetPage(pageNum,pageSize);
+      PageHelper.startPage(pageNum,pageSize);
       List<Paper> list=paperDao.getAllPapers();
       PageInfo<Paper> pageInfo=new PageInfo<>();
       pageInfo.setList(list);
