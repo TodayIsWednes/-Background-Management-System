@@ -88,8 +88,11 @@
     <delete id="deletePaper" parameterType="Paper">
         delete from t_paper
         <where>
+            <if test="id!=null">
+                id=#{id}
+            </if>
             <if test="paperName!=null">
-                papername=#{paperName}
+                AND papername=#{paperName}
             </if>
             <if test="testTime!=null">
                 AND testtime=#{testTime}
@@ -113,6 +116,10 @@
                 AND updatetime=#{updateTime}
             </if>
         </where>
+    </delete>
+
+    <delete id="deleteQuestionOfPaperByPaperId" parameterType="java.lang.Long">
+        delete from t_paper_question where paperid=#{paperId}
     </delete>
 
     <update id="updatePaperById" parameterType="Paper" useGeneratedKeys="true" keyProperty="id">

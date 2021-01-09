@@ -20,6 +20,7 @@ public class PaperServiceImpl implements PaperService {
 
    @Autowired
    QuestionDao questionDao;
+
    @Autowired
    CourseDao courseDao;
 
@@ -38,7 +39,7 @@ public class PaperServiceImpl implements PaperService {
    public PageInfo<Paper> findPaper(Paper paper,int pageNum,int pageSize) {
       PageHelper.startPage(pageNum,pageSize);
       List<Paper> list= paperDao.findPaper(paper);
-      PageInfo<Paper> pageInfo=new PageInfo<>();
+      PageInfo<Paper> pageInfo=new PageInfo<>(list);
       pageInfo.setList(list);
       return pageInfo;
    }
@@ -47,7 +48,7 @@ public class PaperServiceImpl implements PaperService {
    public PageInfo<Paper> getAllPapers(int pageNum,int pageSize) {
       PageHelper.startPage(pageNum,pageSize);
       List<Paper> list=paperDao.getAllPapers();
-      PageInfo<Paper> pageInfo=new PageInfo<>();
+      PageInfo<Paper> pageInfo=new PageInfo<>(list);
       pageInfo.setList(list);
       return pageInfo;
    }
@@ -58,7 +59,11 @@ public class PaperServiceImpl implements PaperService {
    }
 
    @Override
+   @Transactional
    public int deletePaper(Paper paper) {
+      //删除试卷的题
+      paperDao.deleteQuestionOfPaperByPaperId(paper.getId());
+      //删除试卷的信息
       return paperDao.deletePaper(paper);
    }
 
